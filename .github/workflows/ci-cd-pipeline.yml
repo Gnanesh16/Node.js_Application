@@ -52,7 +52,7 @@ jobs:
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
           sudo export KUBECONFIG=kubeconfig
-          find /etc/ -name  admin.conf
+          sudo find /etc/ -name  admin.conf
           sudo export KUBECONFIG=/etc/kubernetes/admin.conf
           
       - name: Set up kubeconfig
