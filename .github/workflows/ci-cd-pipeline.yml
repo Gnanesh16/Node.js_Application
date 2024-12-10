@@ -60,7 +60,7 @@ jobs:
           apiVersion: v1
           clusters:
           - cluster:
-              server: https://<API_SERVER>:6443
+              server: https://172.31.16.37:6443
               certificate-authority-data: ${{ secrets.CA_CRT}}
             name: kubernetes
           contexts:
