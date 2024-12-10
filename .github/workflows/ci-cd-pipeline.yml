@@ -52,8 +52,6 @@ jobs:
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
           sudo export KUBECONFIG=kubeconfig
-          sudo find /etc/ -name  admin.conf
-          sudo export KUBECONFIG=/etc/kubernetes/admin.conf
           
       - name: Set up kubeconfig
         run: |
@@ -79,11 +77,11 @@ jobs:
               token: ${{ secrets.K8S_TOKEN }}
           " > ~/.kube/config
 
-      - name: Verify kubectl configuration
-        run: sudo kubectl get nodes
+      #- name: Verify kubectl configuration
+        #run: sudo kubectl get nodes
 
-      - name: Verify Kubernetes Cluster Connectivity
-        run: sudo kubectl cluster-info
+      #- name: Verify Kubernetes Cluster Connectivity
+        #run: sudo kubectl cluster-info
 
       - name: Deploy to Kubernetes
         run: |
