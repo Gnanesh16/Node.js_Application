@@ -51,9 +51,9 @@ jobs:
       - name: Configure kubectl
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
-          export KUBECONFIG=kubeconfig
+          sudo export KUBECONFIG=kubeconfig
           find /etc/ -name  admin.conf
-          export KUBECONFIG=/etc/kubernetes/admin.conf
+          sudo export KUBECONFIG=/etc/kubernetes/admin.conf
           
       - name: Set up kubeconfig
         run: |
