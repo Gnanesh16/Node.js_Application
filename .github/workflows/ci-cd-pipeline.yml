@@ -51,7 +51,7 @@ jobs:
       - name: Configure kubectl
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
-          sudo export KUBECONFIG=kubeconfig
+          export KUBECONFIG=kubeconfig
           
       - name: Set up kubeconfig
         run: |
