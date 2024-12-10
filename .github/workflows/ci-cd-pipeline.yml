@@ -52,9 +52,36 @@ jobs:
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
           export KUBECONFIG=kubeconfig
+          
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "
+          apiVersion: v1
+          clusters:
+          - cluster:
+              server: https://<API_SERVER>:6443
+              certificate-authority-data: ${{ secrets.CA_CRT}}
+            name: kubernetes
+          contexts:
+          - context:
+              cluster: kubernetes
+              user: github-actions-sa
+            name: github-actions-context
+          current-context: github-actions-context
+          kind: Config
+          preferences: {}
+          users:
+          - name: github-actions-sa
+            user:
+              token: ${{ secrets.K8S_TOKEN }}
+          " > ~/.kube/config
 
-      #- name: Verify Kubernetes Cluster Connectivity
-        #run: kubectl cluster-info
+      - name: Verify kubectl configuration
+        run: kubectl get nodes
+
+      - name: Verify Kubernetes Cluster Connectivity
+        run: kubectl cluster-info
 
       - name: Deploy to Kubernetes
         run: |
