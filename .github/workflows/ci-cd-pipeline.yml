@@ -55,27 +55,7 @@ jobs:
           
       - name: Set up kubeconfig
         run: |
-          mkdir -p ~/.kube
-          echo "
-          apiVersion: v1
-          clusters:
-          - cluster:
-              server: https://172.31.16.37:6443
-              certificate-authority-data: ${{ secrets.CA_CRT}}
-            name: kubernetes
-          contexts:
-          - context:
-              cluster: kubernetes
-              user: github-actions-sa
-            name: github-actions-context
-          current-context: github-actions-context
-          kind: Config
-          preferences: {}
-          users:
-          - name: github-actions-sa
-            user:
-              token: ${{ secrets.K8S_TOKEN }}
-          " > ~/.kube/config
+          echo "${{ secrets.KUBECONFIG_FILE }}" > $HOME/.kube/config
 
       - name: Verify kubectl configuration
         run: sudo kubectl get nodes
