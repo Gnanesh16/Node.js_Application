@@ -60,16 +60,21 @@ jobs:
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
 
-      - name: Verify kubectl configuration
-        run: sudo kubectl get nodes
+      #- name: Verify kubectl configuration
+        #run: sudo kubectl get nodes
 
-      - name: Verify Kubernetes Cluster Connectivity
-        run: sudo kubectl cluster-info
+      #- name: Verify Kubernetes Cluster Connectivity
+        #run: sudo kubectl cluster-info
 
       - name: Deploy to Kubernetes
         run: |
           kubectl create -f k8s/deployment.yaml
           kubectl create -f k8s/service.yaml
+
+      - name: Verify Deployment
+        run: |
+          kubectl get pods
+          kubectl get svc
       
   notify:
     needs: build-and-deploy
