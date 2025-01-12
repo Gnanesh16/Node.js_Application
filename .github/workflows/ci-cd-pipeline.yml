@@ -52,6 +52,7 @@ jobs:
         #run: |
           #echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > kubeconfig
           #export KUBECONFIG=kubeconfig
+    
       - name: Create .kube directory
         run: mkdir -p $HOME/.kube
           
