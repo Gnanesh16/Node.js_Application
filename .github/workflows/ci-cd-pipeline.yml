@@ -48,12 +48,13 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/node-app:latest
 
-      - name: Set up kubectl
-        uses: tale/kubectl-action@v1
-        with:
-          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+      - name: Configure kubectl
+        run: |
+          sudo mkdir -p ${HOME}/.kube
+          echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
 
-      - name: Verify Kubernetes Cluster Connectivity
+      # Verify Kubernetes Cluster Connectivity
+      - name: Verify Kubernetes Cluster
         run: |
           kubectl cluster-info
           kubectl get nodes
@@ -62,50 +63,6 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
-
-      - name: Verify Deployment
-        run: |
-          kubectl get pods
-          kubectl get svc
-
-  notify:
-    needs: build-and-deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Email Notification
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 587
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: 'Deployment Status: ${{ job.status }}'
-          body: |
-            Hello,
-            The deployment pipeline for your Node.js application has completed with status: ${{ job.status }}.
-            Regards,
-            CI/CD Pipeline
-          to: reddygnanesh.rg@gmail.com
-          from: noreply@github.com
-    
-      #- name: Create .kube directory
-        #run: mkdir -p $HOME/.kube
-          
-      #- name: Set up kubeconfig
-        #run: |
-          #echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
-
-      #- name: Verify kubectl configuration
-        #run: sudo kubectl get nodes
-
-      #- name: Verify Kubernetes Cluster Connectivity
-        #run: sudo kubectl cluster-info
-
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f k8s/deployment.yaml
-          kubectl apply -f k8s/service.yaml
-
       - name: Verify Deployment
         run: |
           kubectl get pods
@@ -125,9 +82,7 @@ jobs:
           subject: 'Deployment Status: ${{ job.status }}'
           body: |
             Hello,
-
             The deployment pipeline for your Node.js application has completed with status: ${{ job.status }}.
-
             Regards,
             CI/CD Pipeline
           to: reddygnanesh.rg@gmail.com
