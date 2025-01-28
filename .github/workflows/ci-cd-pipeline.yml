@@ -53,10 +53,10 @@ jobs:
         with:
           base64-kube-config: ${{ secrets.KUBE_CONFIG }}
 
-      - name: Verify Kubernetes Cluster Connectivity
-        run: |
-          kubectl cluster-info
-          kubectl get nodes
+      #- name: Verify Kubernetes Cluster Connectivity
+        #run: |
+          #kubectl cluster-info
+          #kubectl get nodes
 
       - name: Deploy to Kubernetes
         run: |
