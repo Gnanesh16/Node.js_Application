@@ -48,13 +48,12 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/node-app:latest
 
-      - name: Configure kubectl
-        run: |
-          sudo mkdir -p ${HOME}/.kube
-          echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
+      - name: Set up kubectl
+        uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
 
-      # Verify Kubernetes Cluster Connectivity
-      - name: Verify Kubernetes Cluster
+      - name: Verify Kubernetes Cluster Connectivity
         run: |
           kubectl cluster-info
           kubectl get nodes
@@ -63,11 +62,12 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
+
       - name: Verify Deployment
         run: |
           kubectl get pods
           kubectl get svc
-      
+
   notify:
     needs: build-and-deploy
     runs-on: ubuntu-latest
